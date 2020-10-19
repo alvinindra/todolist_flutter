@@ -36,18 +36,21 @@ class _HomeState extends State<Home> {
   Card cardo(ClassCatcher todo) {
     return Card(
       color: Colors.white,
-      elevation: 2.0,
+      elevation: 4.0,
+      margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: Colors.white,
-          child: Icon(Icons.my_library_books),
-        ),
         title: Text(
           todo.title,
         ),
-        subtitle: Text(todo.title.toString()),
+        subtitle: Text(todo.desc.toString()),
+        contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
         trailing: GestureDetector(
-          child: Icon(Icons.delete),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.delete),
+            ],
+          ),
           onTap: () async {
             int result = await dbHelper.delete(todo);
             if (result > 0) {
@@ -72,18 +75,21 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Daftar Data-Data'),
+        title: Text('Todo List'),
       ),
-      body: FutureBuilder<List<ClassCatcher>>(
-        future: future,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Column(
-                children: snapshot.data.map((todo) => cardo(todo)).toList());
-          } else {
-            return SizedBox();
-          }
-        },
+      body: Padding(
+        padding: const EdgeInsets.only(top: 8.0),
+        child: FutureBuilder<List<ClassCatcher>>(
+          future: future,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Column(
+                  children: snapshot.data.map((todo) => cardo(todo)).toList());
+            } else {
+              return SizedBox();
+            }
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
