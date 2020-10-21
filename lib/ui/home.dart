@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../model/todo.dart';
 import '../local/crud.dart';
+import '../model/todo.dart';
 import 'enter.dart';
 
 class Home extends StatefulWidget {
@@ -27,8 +27,7 @@ class _HomeState extends State<Home> {
     });
   }
 
-  Future<Todo> navigateToEntryForm(
-      BuildContext context, Todo todo) async {
+  Future<Todo> navigateToEntryForm(BuildContext context, Todo todo) async {
     var result = await Navigator.push(context,
         MaterialPageRoute(builder: (BuildContext context) {
       return EntryForm(todo);
@@ -80,19 +79,23 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: Text('Todo List'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(top: 8.0),
-        child: FutureBuilder<List<Todo>>(
-          future: future,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return Column(
-                  children: snapshot.data.map((todo) => cardo(todo)).toList());
-            } else {
-              return SizedBox();
-            }
-          },
-        ),
+      body: FutureBuilder<List<Todo>>(
+        future: future,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: snapshot.data.length,
+              itemBuilder: (context, index) {
+                Todo todo = snapshot.data[index];
+                return Column(
+                  children: <Widget>[cardo(todo)],
+                );
+              },
+            );
+          } else {
+            return SizedBox();
+          }
+        },
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
