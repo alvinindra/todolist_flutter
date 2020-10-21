@@ -1,7 +1,9 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
-import 'crud.dart';
-import 'class_catcher.dart';
+
+import 'package:flutter/material.dart';
+
+import '../model/todo.dart';
+import '../local/crud.dart';
 import 'enter.dart';
 
 class Home extends StatefulWidget {
@@ -11,7 +13,8 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   CRUD dbHelper = CRUD();
-  Future<List<ClassCatcher>> future;
+  Future<List<Todo>> future;
+
   @override
   void initState() {
     super.initState();
@@ -24,8 +27,8 @@ class _HomeState extends State<Home> {
     });
   }
 
-  Future<ClassCatcher> navigateToEntryForm(
-      BuildContext context, ClassCatcher todo) async {
+  Future<Todo> navigateToEntryForm(
+      BuildContext context, Todo todo) async {
     var result = await Navigator.push(context,
         MaterialPageRoute(builder: (BuildContext context) {
       return EntryForm(todo);
@@ -33,7 +36,7 @@ class _HomeState extends State<Home> {
     return result;
   }
 
-  Card cardo(ClassCatcher todo) {
+  Card cardo(Todo todo) {
     return Card(
       color: Colors.white,
       elevation: 4.0,
@@ -79,7 +82,7 @@ class _HomeState extends State<Home> {
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 8.0),
-        child: FutureBuilder<List<ClassCatcher>>(
+        child: FutureBuilder<List<Todo>>(
           future: future,
           builder: (context, snapshot) {
             if (snapshot.hasData) {

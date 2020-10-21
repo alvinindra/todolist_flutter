@@ -1,18 +1,20 @@
-class ClassCatcher {
+class Todo {
   int _id;
   String _title;
   String _desc;
 
-  ClassCatcher(this._title, this._desc);
+  Todo(this._title, this._desc);
 
-  ClassCatcher.fromMap(Map<String, dynamic> map) {
+  Todo.fromMap(Map<String, dynamic> map) {
     this._id = map['id'];
     this._title = map['title'];
     this._desc = map['desc'];
   }
 
   int get id => _id;
+
   String get title => _title;
+
   String get desc => _desc;
 
   set title(String value) {
