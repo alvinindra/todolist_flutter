@@ -15,6 +15,8 @@ class _HomeState extends State<Home> {
   CRUD dbHelper = CRUD();
   Future<List<Todo>> future;
 
+  int currentTab = 1;
+
   @override
   void initState() {
     super.initState();
@@ -39,7 +41,7 @@ class _HomeState extends State<Home> {
     return Card(
       color: Colors.white,
       elevation: 4.0,
-      margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      margin: EdgeInsets.only(top: 16, left: 16, right: 16),
       child: ListTile(
         title: Text(
           todo.title,
@@ -109,6 +111,72 @@ class _HomeState extends State<Home> {
             }
           }
         },
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: BottomAppBar(
+        shape: CircularNotchedRectangle(),
+        notchMargin: 10,
+        child: Container(
+          height: 60,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  MaterialButton(
+                    minWidth: 40,
+                    onPressed: () {
+                      setState(() {
+                        currentTab = 1;
+                      });
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(
+                          Icons.book,
+                          color: currentTab == 1 ? Colors.blue : Colors.grey,
+                        ),
+                        Text(
+                          'List',
+                          style: TextStyle(
+                            color: currentTab == 1 ? Colors.blue : Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+
+              // Right Tab bar icons
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  MaterialButton(
+                    minWidth: 60,
+                    onPressed: () {
+                      setState(() {});
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(
+                          Icons.person,
+                        ),
+                        Text(
+                          'Profile',
+                          style: TextStyle(),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
