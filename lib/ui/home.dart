@@ -78,7 +78,10 @@ class _HomeState extends State<Home> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image(image: AssetImage('images/img_no_task.png')),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 32.0, right: 32.0),
+                      child: Image(image: AssetImage('images/img-no-tasks.png')),
+                    ),
                     Padding(
                       padding: const EdgeInsets.only(top: 16.0),
                       child: Text(
@@ -173,6 +176,7 @@ class _HomeState extends State<Home> {
                             color: currentTab == 1
                                 ? Color(0xff29A19C)
                                 : Colors.grey,
+                            fontWeight: FontWeight.w600
                           ),
                         ),
                       ],
@@ -206,6 +210,7 @@ class _HomeState extends State<Home> {
                             color: currentTab == 2
                                 ? Color(0xff29A19C)
                                 : Colors.grey,
+                              fontWeight: FontWeight.w600
                           ),
                         ),
                       ],
