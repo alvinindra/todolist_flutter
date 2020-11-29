@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
@@ -37,41 +38,21 @@ class _HomeState extends State<Home> {
     return result;
   }
 
-  Card cardo(Todo todo) {
-    return Card(
-      color: Colors.white,
-      elevation: 4.0,
-      margin: EdgeInsets.only(top: 16, left: 16, right: 16),
-      child: ListTile(
-        title: Text(
-          todo.title,
-        ),
-        subtitle: Text(todo.desc.toString()),
-        contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-        trailing: GestureDetector(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.delete),
-            ],
-          ),
-          onTap: () async {
-            int result = await dbHelper.delete(todo);
-            if (result > 0) {
-              updateListView();
-            }
-          },
-        ),
-        onTap: () async {
-          var todo2 = await navigateToEntryForm(context, todo);
-          if (todo2 != null) {
-            int result = await dbHelper.update(todo2);
-            if (result > 0) {
-              updateListView();
-            }
-          }
-        },
+  ListTile rowItem(Todo todo) {
+    return ListTile(
+      title: Text(
+        todo.title,
       ),
+      subtitle: Text(todo.desc.toString()),
+      onTap: () async {
+        var todo2 = await navigateToEntryForm(context, todo);
+        if (todo2 != null) {
+          int result = await dbHelper.update(todo2);
+          if (result > 0) {
+            updateListView();
+          }
+        }
+      },
     );
   }
 
@@ -79,23 +60,70 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Todo List'),
+        title: Center(
+            child: Text(
+          'ToDoList',
+          style: TextStyle(fontWeight: FontWeight.w600),
+        )),
       ),
       body: FutureBuilder<List<Todo>>(
         future: future,
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
+          if (!snapshot.hasData || snapshot.data == null) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.data.length == 0) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image(image: AssetImage('images/img_no_task.png')),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16.0),
+                      child: Text(
+                        "Tidak Ada Tugas",
+                        style: TextStyle(
+                            color: Color(0xff29A19C),
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                    Text(
+                      "Ayo buat tugas untuk hari ini!",
+                      style: TextStyle(
+                          color: Colors.grey.shade400,
+                          fontWeight: FontWeight.w600),
+                    )
+                  ],
+                ),
+              ),
+            );
+          } else {
             return ListView.builder(
               itemCount: snapshot.data.length,
               itemBuilder: (context, index) {
                 Todo todo = snapshot.data[index];
-                return Column(
-                  children: <Widget>[cardo(todo)],
-                );
+
+                return Dismissible(
+                    direction: DismissDirection.endToStart,
+                    background: Container(color: Colors.blue),
+                    secondaryBackground: Container(color: Colors.red),
+                    key: Key(todo.title),
+                    onDismissed: (direction) async {
+                      if (direction == DismissDirection.endToStart) {
+                        snapshot.data.removeAt(index);
+                        int result = await dbHelper.delete(todo);
+                        if (result > 0) {
+                          updateListView();
+                        }
+                      }
+                    },
+                    child: Column(
+                      children: <Widget>[rowItem(todo)],
+                    ));
               },
             );
-          } else {
-            return SizedBox();
           }
         },
       ),
@@ -136,12 +164,15 @@ class _HomeState extends State<Home> {
                       children: <Widget>[
                         Icon(
                           Icons.book,
-                          color: currentTab == 1 ? Colors.blue : Colors.grey,
+                          color:
+                              currentTab == 1 ? Color(0xff29A19C) : Colors.grey,
                         ),
                         Text(
                           'List',
                           style: TextStyle(
-                            color: currentTab == 1 ? Colors.blue : Colors.grey,
+                            color: currentTab == 1
+                                ? Color(0xff29A19C)
+                                : Colors.grey,
                           ),
                         ),
                       ],
@@ -157,17 +188,25 @@ class _HomeState extends State<Home> {
                   MaterialButton(
                     minWidth: 60,
                     onPressed: () {
-                      setState(() {});
+                      setState(() {
+                        currentTab = 2;
+                      });
                     },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Icon(
                           Icons.person,
+                          color:
+                              currentTab == 2 ? Color(0xff29A19C) : Colors.grey,
                         ),
                         Text(
                           'Profile',
-                          style: TextStyle(),
+                          style: TextStyle(
+                            color: currentTab == 2
+                                ? Color(0xff29A19C)
+                                : Colors.grey,
+                          ),
                         ),
                       ],
                     ),

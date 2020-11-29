@@ -10,8 +10,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Tambahkan Daftar',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+          primaryColor: Color(0xff29A19C),
+          primarySwatch: Colors.teal,
+          fontFamily: 'Poppins'),
       home: Home(),
     );
   }
